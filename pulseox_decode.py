@@ -37,6 +37,7 @@ spo2      = 0
 io = GPIO.Intel()
 
 # Setup pin directions
+io.cleanup()
 io.setup('IO2', 'in')
 io.setup('IO3', 'in')
 io.setup('IO4', 'in')
@@ -75,16 +76,19 @@ conv = {0b1110111: 0,
 # Start reading
 while 1:
 	anData = int(io.input(pins['Aa'])) | int(io.input(pins['Ab']))<<1 | int(io.input(pins['Ac']))<<2 | int(io.input(pins['Ad']))<<3 | int(io.input(pins['Ae']))<<4 | int(io.input(pins['Af']))<<5 | int(io.input(pins['Ag']))<<6
-	catData = int(io.input(pins['CA'])) | int(io.input(pins['CB']))<<1 | int(io.input(pins['CC']))<<2
+	catData = int(io.input(pins['CB'])) | int(io.input(pins['CC']))<<1
+	
+	print anData
+	print catData
 
-	if catData == 2:
-		spo2Tens = conv[catData]
-	elif catData == 4:
-		spo2Units = conv[catData]
+	if catData == 1:
+		spo2Tens = conv[anData]
+	elif catData == 2:
+		spo2Units = conv[anData]
 	else:
 		pass
 	
-	if spo2Tens!=0 and spo2Units!=0:
-		spo2 = 10*spo2Tens + spo2Units
-	
+	spo2 = 10*spo2Tens + spo2Units
 	print spo2
+	
+	print '-----'
