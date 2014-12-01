@@ -82,9 +82,15 @@ while 1:
 	print catData
 
 	if catData == 1:
-		spo2Tens = conv[anData]
+		try:
+			spo2Tens = conv[anData]
+		except KeyError:
+			pass
 	elif catData == 2:
-		spo2Units = conv[anData]
+		try:
+			spo2Units = conv[anData]
+		except KeyError:
+			pass
 	else:
 		pass
 	
