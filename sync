@@ -1,0 +1,3 @@
+#!/bin/sh
+
+scp ./* root@10.42.0.77:~/pulseox_decode/
