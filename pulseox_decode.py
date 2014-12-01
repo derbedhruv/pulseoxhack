@@ -83,12 +83,14 @@ while 1:
 
 	if catData == 1:
 		try:
-			spo2Tens = conv[anData]
+			if conv[anData]!=0:
+				spo2Tens = conv[anData]
 		except KeyError:
 			pass
 	elif catData == 2:
 		try:
-			spo2Units = conv[anData]
+			if conv[anData]!=0:
+				spo2Units = conv[anData]
 		except KeyError:
 			pass
 	else:
