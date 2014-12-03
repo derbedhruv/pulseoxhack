@@ -13,8 +13,7 @@
 int data[6]; // 7-bit data for each of the displays
 int anData;  // Anode data
 
-int segmentB = 0, segmentC = 0;
-int ci = 1, bi = 1;                // counters for how many values have been added to the segmentB and C vriables respectively
+int segmentB = 0, segmentC = 0, count = 0;	// segment display buffers and counter
 
 void setup() {
   Serial.begin(9600);
@@ -62,22 +61,13 @@ void loop() {
   if (data[1] != 0) {    // do not consider value '0'
     segmentB = data[1];
   }
-  
-  Serial.println(10*segmentB + segmentC);    // print the "O2 sat"
-    
-  /**/
-  
-  /*
-  Serial.print("A: ");
-  Serial.println(data[0]);
-  
-  Serial.print("B: ");
-  Serial.print(data[1]);
-  Serial.print('\t');
-  Serial.print("C: ");
-  Serial.println(data[2]);/**/
-  
-  // Serial.println(10*data[2]+data[1]);
+ 
+  if (count >= 1000) { 
+    // after 1000 counts, the values settle to what we observe on the display
+    Serial.println(10*segmentB + segmentC);    // print the "O2 sat"
+    count = 0;
+  }
+  count++;
 }
 
 int Seg2Bin(int in) {
