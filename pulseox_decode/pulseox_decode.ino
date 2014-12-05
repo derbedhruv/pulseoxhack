@@ -33,17 +33,18 @@ void setup() {
 
 void loop() {
   anData = digitalRead(Aa) | digitalRead(Ab)<<1 | digitalRead(Ac)<<2 | digitalRead(Ad)<<3 | digitalRead(Ae)<<4 | digitalRead(Af)<<5 | digitalRead(Ag)<<6;
+  // Serial.println(Seg2Bin(anData));
     
   switch(digitalRead(CA) |  digitalRead(CB)<<1 | digitalRead(CC)<<2) {
-    case 1: {
+    case 6: {
       data[0] = Seg2Bin(anData);
       break;
     } 
-    case 2: {
+    case 5: {
       data[1] = Seg2Bin(anData);
       break;
     }
-    case 4: {
+    case 3: {
       data[2] = Seg2Bin(anData);
       break;
     }
@@ -72,34 +73,34 @@ void loop() {
 
 int Seg2Bin(int in) {
   switch(in) {
-    case 0b1110111: {
+    case 119: {
       return 0;
     }
-    case 0b0100100: {
+    case 36: {
       return 1;
     }
-    case 0b1011101: {
+    case 93: {
       return 2;
     }
-    case 0b1101101: {
+    case 109: {
       return 3;
     }
-    case 0b0101110: {
+    case 46: {
       return 4;
     }
-    case 0b1101011: {
+    case 107: {
       return 5;
     }
-    case 0b1111011: {
+    case 123: {
       return 6;
     }
-    case 0b0100101: {
+    case 37: {
       return 7;
     }
-    case 0b1111111: {
+    case 127: {
       return 8;
     }
-    case 0b1101111: {
+    case 111: {
       return 9;
     }
     default: {
