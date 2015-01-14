@@ -13,8 +13,7 @@
 int data[6]; // 7-bit data for each of the displays
 int anData;  // Anode data
 
-int segmentB = 0, segmentC = 0;
-int ci = 1, bi = 1;                // counters for how many values have been added to the segmentB and C vriables respectively
+int segmentB = 0, segmentC = 0, count = 0;	// segment display buffers and counter
 
 void setup() {
   Serial.begin(9600);
@@ -34,21 +33,43 @@ void setup() {
 
 void loop() {
   anData = digitalRead(Aa) | digitalRead(Ab)<<1 | digitalRead(Ac)<<2 | digitalRead(Ad)<<3 | digitalRead(Ae)<<4 | digitalRead(Af)<<5 | digitalRead(Ag)<<6;
+  /*
+  Serial.print(digitalRead(Aa));
+  Serial.print("|");
+  Serial.print(digitalRead(Ab));
+  Serial.print("|");
+  Serial.print(digitalRead(Ac));
+  Serial.print("|");
+  Serial.print(digitalRead(Ad));
+  Serial.print("|");
+  Serial.print(digitalRead(Ae));
+  Serial.print("|");
+  Serial.print(digitalRead(Af));
+  Serial.print("|");
+  Serial.println(digitalRead(Ag));
+  */
     
   switch(digitalRead(CA) |  digitalRead(CB)<<1 | digitalRead(CC)<<2) {
-    case 1: {
+    case 7: {
+      // Serial.print(anData);
       data[0] = Seg2Bin(anData);
+      // Serial.println(data[0]);
       break;
     } 
-    case 2: {
+    case 5: {
+      // Serial.print(anData);
       data[1] = Seg2Bin(anData);
+      // Serial.println(data[1]);
       break;
     }
-    case 4: {
+    case 3: {
+      // Serial.print(anData);
       data[2] = Seg2Bin(anData);
+      // Serial.println(data[2]);
       break;
     }
     default: {
+      // Serial.println(digitalRead(CA) |  digitalRead(CB)<<1 | digitalRead(CC)<<2);
       break;
     }
   }
@@ -59,25 +80,17 @@ void loop() {
     segmentC = data[2];
   }
   
+  
   if (data[1] != 0) {    // do not consider value '0'
     segmentB = data[1];
   }
-  
-  Serial.println(10*segmentB + segmentC);    // print the "O2 sat"
-    
-  /**/
-  
-  /*
-  Serial.print("A: ");
-  Serial.println(data[0]);
-  
-  Serial.print("B: ");
-  Serial.print(data[1]);
-  Serial.print('\t');
-  Serial.print("C: ");
-  Serial.println(data[2]);/**/
-  
-  // Serial.println(10*data[2]+data[1]);
+ 
+  if (count >= 100) { 
+    // after 1000 counts, the values settle to what we observe on the display
+    Serial.println(10*segmentB + segmentC);    // print the "O2 sat"
+    count = 0;
+  }
+  count++;
 }
 
 int Seg2Bin(int in) {
