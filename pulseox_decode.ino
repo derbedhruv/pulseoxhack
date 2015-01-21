@@ -33,22 +33,43 @@ void setup() {
 
 void loop() {
   anData = digitalRead(Aa) | digitalRead(Ab)<<1 | digitalRead(Ac)<<2 | digitalRead(Ad)<<3 | digitalRead(Ae)<<4 | digitalRead(Af)<<5 | digitalRead(Ag)<<6;
-  // Serial.println(Seg2Bin(anData));
+  /*
+  Serial.print(digitalRead(Aa));
+  Serial.print("|");
+  Serial.print(digitalRead(Ab));
+  Serial.print("|");
+  Serial.print(digitalRead(Ac));
+  Serial.print("|");
+  Serial.print(digitalRead(Ad));
+  Serial.print("|");
+  Serial.print(digitalRead(Ae));
+  Serial.print("|");
+  Serial.print(digitalRead(Af));
+  Serial.print("|");
+  Serial.println(digitalRead(Ag));
+  */
     
   switch(digitalRead(CA) |  digitalRead(CB)<<1 | digitalRead(CC)<<2) {
-    case 6: {
+    case 7: {
+      // Serial.print(anData);
       data[0] = Seg2Bin(anData);
+      // Serial.println(data[0]);
       break;
     } 
     case 5: {
+      // Serial.print(anData);
       data[1] = Seg2Bin(anData);
+      // Serial.println(data[1]);
       break;
     }
     case 3: {
+      // Serial.print(anData);
       data[2] = Seg2Bin(anData);
+      // Serial.println(data[2]);
       break;
     }
     default: {
+      // Serial.println(digitalRead(CA) |  digitalRead(CB)<<1 | digitalRead(CC)<<2);
       break;
     }
   }
@@ -59,11 +80,12 @@ void loop() {
     segmentC = data[2];
   }
   
+  
   if (data[1] != 0) {    // do not consider value '0'
     segmentB = data[1];
   }
  
-  if (count >= 1000) { 
+  if (count >= 100) { 
     // after 1000 counts, the values settle to what we observe on the display
     Serial.println(10*segmentB + segmentC);    // print the "O2 sat"
     count = 0;
@@ -73,34 +95,34 @@ void loop() {
 
 int Seg2Bin(int in) {
   switch(in) {
-    case 119: {
+    case 0b1110111: {
       return 0;
     }
-    case 36: {
+    case 0b0100100: {
       return 1;
     }
-    case 93: {
+    case 0b1011101: {
       return 2;
     }
-    case 109: {
+    case 0b1101101: {
       return 3;
     }
-    case 46: {
+    case 0b0101110: {
       return 4;
     }
-    case 107: {
+    case 0b1101011: {
       return 5;
     }
-    case 123: {
+    case 0b1111011: {
       return 6;
     }
-    case 37: {
+    case 0b0100101: {
       return 7;
     }
-    case 127: {
+    case 0b1111111: {
       return 8;
     }
-    case 111: {
+    case 0b1101111: {
       return 9;
     }
     default: {
