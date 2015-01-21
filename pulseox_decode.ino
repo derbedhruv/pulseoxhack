@@ -1,4 +1,40 @@
-#define CA 2
+/*****************************************************************
+  CMS50D Pulse oximeter Hack
+
+  Author: Dhruv Joshi
+
+  This is a means to 'hack' the oxygen saturation values from a CMS50D fingertip pulse oximeter, which specifically uses 7-segment displays. 
+  Arduino UNO or Micro are being used. THe pulse ox is being powered by the 3.3V pin from the board itself. The 7-segment mapping is assumed 
+  to be as follows:
+
+  	a
+       ___
+   f  |   |  b
+      |___|  
+   e  | g |  c
+      |___|
+        d
+
+  And the mapping is being done to digital pins 4 - 12 as follows (9 pins total, 7 for anodes and 2 for two displays to display o2sat values in the range 0-99...
+
+  4 - tens place
+  5 - units place
+
+  6 - a
+  7 - b
+  8 - f
+  9 - g
+ 10 - c
+ 11 - e
+ 12 - d
+
+  I'll try to make it generic so that if this order is changed, then one can easily make the changesis changed, then one can easily make the changes..
+
+  Aa stands for Anode 'a' and so on.. CA and CB stand for the tens and units place of the oxygen saturation value respectively.
+
+*/
+
+
 #define CB 3
 #define CC 4
 
