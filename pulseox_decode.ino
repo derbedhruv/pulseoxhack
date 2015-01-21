@@ -38,25 +38,25 @@
 #define CB 3
 #define CC 4
 
-#define Aa 5
-#define Ab 6
-#define Ac 7
-#define Ad 8
-#define Ae 9
-#define Af 10
-#define Ag 11
+#define Aa 6
+#define Ab 7
+#define Ac 10
+#define Ad 12
+#define Ae 11
+#define Af 8
+#define Ag 9
 
-int data[6]; // 7-bit data for each of the displays
-int anData;  // Anode data
+int data[2]; // 7-bit data for each of the two displays
+int anData;  // Anode data, made by concatenating the bits together. So basically a snapshot of the digital pins Aa through Ag at a time
 
-int segmentB = 0, segmentC = 0, count = 0;	// segment display buffers and counter
+int segmentA = 0, segmentB = 0, count = 0;	// segment display buffers and counter
 
 void setup() {
   Serial.begin(9600);
   
+  // setting pinmodes
   pinMode(CA, INPUT);
   pinMode(CB, INPUT);
-  pinMode(CC, INPUT);
   
   pinMode(Aa, INPUT);
   pinMode(Ab, INPUT);
@@ -68,91 +68,70 @@ void setup() {
 }
 
 void loop() {
+  // concatenate the digital pins..
   anData = digitalRead(Aa) | digitalRead(Ab)<<1 | digitalRead(Ac)<<2 | digitalRead(Ad)<<3 | digitalRead(Ae)<<4 | digitalRead(Af)<<5 | digitalRead(Ag)<<6;
-  /*
-  Serial.print(digitalRead(Aa));
-  Serial.print("|");
-  Serial.print(digitalRead(Ab));
-  Serial.print("|");
-  Serial.print(digitalRead(Ac));
-  Serial.print("|");
-  Serial.print(digitalRead(Ad));
-  Serial.print("|");
-  Serial.print(digitalRead(Ae));
-  Serial.print("|");
-  Serial.print(digitalRead(Af));
-  Serial.print("|");
-  Serial.println(digitalRead(Ag));
-  */
     
-  switch(digitalRead(CA) |  digitalRead(CB)<<1 | digitalRead(CC)<<2) {
-    case 7: {
-      // Serial.print(anData);
+  // switch the cathode values to when the desired one is on, and take the corresponding decoded numeric value from the concatenated anodes
+  switch(digitalRead(CA) |  digitalRead(CB)<<1) {
+    case 1: {
       data[0] = Seg2Bin(anData);
-      // Serial.println(data[0]);
       break;
     } 
-    case 5: {
-      // Serial.print(anData);
+    case 2: {
       data[1] = Seg2Bin(anData);
-      // Serial.println(data[1]);
-      break;
-    }
-    case 3: {
-      // Serial.print(anData);
-      data[2] = Seg2Bin(anData);
-      // Serial.println(data[2]);
       break;
     }
     default: {
-      // Serial.println(digitalRead(CA) |  digitalRead(CB)<<1 | digitalRead(CC)<<2);
       break;
     }
   }
   delay(1);
   
   
-  if (data[2] != 0) {    // do not consider value '0'
-    segmentC = data[2];
+  if (data[1] != 0) {    // do not consider value '0'
+    segmentB = data[1];
   }
   
   
-  if (data[1] != 0) {    // do not consider value '0'
-    segmentB = data[1];
+  if (data[0] != 0) {    // do not consider value '0'
+    segmentA = data[0];
   }
  
   if (count >= 100) { 
     // after 1000 counts, the values settle to what we observe on the display
-    Serial.println(10*segmentB + segmentC);    // print the "O2 sat"
+    Serial.println(10*segmentA + segmentB);    // print the "O2 sat"
     count = 0;
   }
   count++;
 }
 
 int Seg2Bin(int in) {
+  // converts the concatenated digital pins into decimal unitary numbers
+  // compare binary with gfedcba
+
   switch(in) {
     case 0b1110111: {
       return 0;
     }
-    case 0b0100100: {
+    case 0b0010010: {
       return 1;
     }
-    case 0b1011101: {
+    case 0b1011011: {
       return 2;
     }
-    case 0b1101101: {
+    case 0b1001111: {
       return 3;
     }
-    case 0b0101110: {
+    case 0b1100110: {
       return 4;
     }
-    case 0b1101011: {
+    case 0b1101101: {
       return 5;
     }
-    case 0b1111011: {
+    case 0b1111101: {
       return 6;
     }
-    case 0b0100101: {
+    case 0b0000111: {
       return 7;
     }
     case 0b1111111: {
